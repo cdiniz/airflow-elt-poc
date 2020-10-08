@@ -1,0 +1,57 @@
+version: '3.7'
+services:
+  airflow_postgres:
+    image: postgres:13.0
+    environment:
+      - POSTGRES_USER=airflow
+      - POSTGRES_PASSWORD=airflow
+      - POSTGRES_DB=airflow
+    volumes:
+      - "./initdb/create_dbs.sh:/docker-entrypoint-initdb.d/create_dbs.sh"
+      - "./tmp/dbdata:/var/lib/postgresql/data"
+    ports:
+      - "5432:5432"
+
+  airflow_initdb:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    depends_on:
+      - airflow_postgres
+    volumes:
+      - ../airflow.cfg:/usr/local/airflow/airflow.cfg
+      - ../resources:/usr/local/airflow/resources
+    command:
+      - /bin/bash
+      - -c
+      - |
+        airflow initdb
+        if [[ -e /usr/local/airflow/resources/dev/all.json ]]; then
+            airflow variables -i /usr/local/airflow/resources/dev/all.json
+        fi
+        if [[ -e /usr/local/airflow/resources/dev/scripts/connections.sh ]]; then
+            /usr/local/airflow/resources/dev/scripts/connections.sh
+        fi
+
+
+  airflow_webserver:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    restart: always
+    depends_on:
+      - airflow_initdb
+    volumes:
+      - ../airflow.cfg:/usr/local/airflow/airflow.cfg
+      - ../src/dags:/usr/local/airflow/dags
+      - ../src/plugins:/usr/local/airflow/plugins
+    ports:
+      - "8080:8080"
+      - "4040:4040"
+    command: webserver
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
