@@ -5,7 +5,12 @@ class Covid19Hook(HttpHook):
     def __init__(self,*args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def get_data(self, country="portugal", start_date=None, end_date=None):
-        response = self.run(endpoint="/country/{}".format(country),data={"from": start_date + 'T00:00:00Z', "to": end_date  + 'T23:59:59Z'})
+    def get_data(self, start_date=None, end_date=None):
+        response = self.run(endpoint="/countries")
         response.raise_for_status()
-        return response.json()
+        countries = list(map(lambda x: x['Slug'], response.json()))
+        for country in countries:
+            response = self.run(endpoint="/country/{}".format(country),data={"from": start_date + 'T00:00:00Z', "to": end_date  + 'T23:59:59Z'})
+            response.raise_for_status()
+            yield response.json()
+
