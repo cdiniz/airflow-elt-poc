@@ -1,14 +1,12 @@
 from unittest.mock import patch
 
 import pytest
-from airflow.hooks.http_hook import HttpHook
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import TaskInstance
 from datetime import datetime
 
 from plugins.common.hooks.covid19_hook import Covid19Hook
 from plugins.common.operators.covid19_to_ingestions import Covid19ToIngestions
-from tests.plugins.common.utils.mock_response import MockResponse
 
 
 class TestCovid19ToIngestionsOperator:
