@@ -5,8 +5,8 @@ from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import TaskInstance
 from datetime import datetime
 
-from plugins.common.hooks.covid19_hook import Covid19Hook
-from plugins.common.operators.covid19_to_ingestions import Covid19ToIngestions
+from dags.common.hooks.covid19_hook import Covid19Hook
+from dags.common.operators.covid19_to_ingestions import Covid19ToIngestions
 
 
 class TestCovid19ToIngestionsOperator:

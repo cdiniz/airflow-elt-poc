@@ -16,13 +16,14 @@ class Covid19ToAnalytics(BaseOperator, SkipMixin):
         day = context['ds']
         pg_hook_analytics.run("DELETE FROM covid19_stats where day = %s", parameters=[day])
         sql_read = """SELECT data #>> '{Country}' as country, 
-                             (data #>> '{Confirmed}')::int as confirmed,
-                             (data #>> '{Deaths}')::int as deaths,
-                             (data #>> '{Recovered}')::int as recovered,   
-                             (data #>> '{Active}')::int as active,
-                             day  
-                      FROM covid19 where day =%s"""
+                             day,
+                             sum((data #>> '{Confirmed}')::int) as confirmed,
+                             sum((data #>> '{Deaths}')::int) as deaths,
+                             sum((data #>> '{Recovered}')::int) as recovered,   
+                             sum((data #>> '{Active}')::int) as active
+                      FROM covid19 where day =%s
+                      GROUP BY country, day"""
 
         rows = pg_hook.get_records(sql_read, parameters=[day])
         pg_hook_analytics.insert_rows('covid19_stats', rows=rows,
-                                      target_fields=['country', 'confirmed', 'deaths', 'recovered', 'active', 'day'])
+                                      target_fields=['country', 'day', 'confirmed', 'deaths', 'recovered', 'active'])

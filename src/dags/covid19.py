@@ -3,9 +3,8 @@ from airflow import DAG
 from airflow.models import Variable
 import json
 
-from common.operators.covid19_to_ingestions import Covid19ToIngestions
-
 from common.operators.covid19_to_analytics import Covid19ToAnalytics
+from common.operators.covid19_to_ingestions import Covid19ToIngestions
 
 default_args = json.loads(Variable.get('covid19'))
 default_args.update({"retry_delay":  timedelta(minutes=default_args["retry_delay"])})

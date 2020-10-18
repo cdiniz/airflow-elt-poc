@@ -4,7 +4,8 @@ import pytest
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import TaskInstance
 import datetime
-from plugins.common.operators.covid19_to_analytics import Covid19ToAnalytics
+
+from dags.common.operators.covid19_to_analytics import Covid19ToAnalytics
 
 
 class TestCovid19ToAnalyticsOperator:
@@ -39,10 +40,19 @@ class TestCovid19ToAnalyticsOperator:
                               23615,
                               _start_date.date())
 
+    _sample_data_analytics_grouped = ("Portugal",
+                              72939*2,
+                              1944*2,
+                              47380*2,
+                              23615*2,
+                              _start_date.date())
+
+
     @pytest.mark.parametrize("test_input,expected",
                              [
                                  ([], [0, []]),
-                                 ([_sample_data],[1, [_sample_data_analytics]])
+                                 ([_sample_data],[1, [_sample_data_analytics]]),
+                                 ([_sample_data,_sample_data], [1, [_sample_data_analytics_grouped]])
                              ])
     def test_execute(self, test_input, expected, dag):
         if len(test_input) > 0:

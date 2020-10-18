@@ -3,7 +3,7 @@ from airflow.utils.decorators import apply_defaults
 from airflow.models import BaseOperator, SkipMixin
 import json
 
-from ..hooks.covid19_hook import Covid19Hook
+from dags.common.hooks.covid19_hook import Covid19Hook
 
 
 class Covid19ToIngestions(BaseOperator, SkipMixin):
