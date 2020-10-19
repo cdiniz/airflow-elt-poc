@@ -5,8 +5,9 @@ The goals are understanding the following topics:
  - how easy is to implement custom operators/hooks, etc
  - how reusable are the custom implemented parts
  
-###Run
+### Run
 
+```
 pip install virtualenv
 
 virtualenv .venv
@@ -18,8 +19,9 @@ pip install -r requirements-airflow.txt
 pip install -r requirements-dev.txt
 
 docker-compose -f docker/docker-compose.yml up
+```
 
-###configure testing in pycharm
+### configure testing in pycharm
 
 create project
 
