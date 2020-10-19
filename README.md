@@ -1,4 +1,4 @@
-## This repo is a proof of concept for a personal evaluation of airflow. 
+## This repo is a proof of concept for a personal evaluation of airflow, and to test data tools like https://greatexpectations.io/. 
 The goals are understanding the following topics:
  - how easy airflow is for local development
  - how easy airflow is to test and possibly use it in a tdd way
