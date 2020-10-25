@@ -1,11 +1,9 @@
 /archive
 */__pycache__
+.pytest_cache
 *.pyc
 .DS_Store
 
-dags/utils/__pycache__/__init__.cpython-37.pyc
-dags/utils/__pycache__/db_config.cpython-37.pyc
-dags/utils/__pycache__/*
 .idea/
 
 dist/
@@ -13,7 +11,7 @@ dist/
 
 .venv
 .env*
-docker/tmp/
+tmp/
 # stuffs that airflow output during runtime
-logs/
-unittests.cfg
+airflow/logs/
+airflow/unittests.cfg

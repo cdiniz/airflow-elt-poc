@@ -4,24 +4,32 @@ The goals are understanding the following topics:
  - how easy airflow is to test and possibly use it in a tdd way
  - how easy is to implement custom operators/hooks, etc
  - how reusable are the custom implemented parts
- - how easy is to integrate great expectations
-### Run
+ 
+### Install and Start Airflow
 
-```
 pip install virtualenv
 
 virtualenv .venv
 
 source .venv/bin/activate
 
-pip install -r requirements-airflow.txt
+pip install -r requirements-docker.txt
 
 pip install -r requirements-dev.txt
 
-docker-compose -f docker/docker-compose.yml up
-```
+docker-compose up
 
-### configure testing in pycharm
+### Run tests
+
+source dev-env.sh
+
+python -m pytest
+
+### Run backfill
+
+airflow backfill covid19 -s 2020-10-03 -e 2020-10-03
+
+### Configure testing in pycharm
 
 create project
 
@@ -29,7 +37,7 @@ choose existing interpretor and choose python3.7 from the created .venv
 
 choose from existing sources when prompted
 
-get env vars from 'source env.sh'
+get env vars from 'source dev-env.sh'
 
 mark src as Sources Root
 

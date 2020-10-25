@@ -3,8 +3,8 @@ from unittest.mock import patch
 import pytest
 from airflow.hooks.http_hook import HttpHook
 
-from dags.common.hooks.covid19_hook import Covid19Hook
-from tests.dags.common.utils.mock_response import MockResponse
+from common.hooks.covid19_hook import Covid19Hook
+from test.dags.common.utils.mock_response import MockResponse
 
 sample_data_pt = [{
     "Country": "Portugal",

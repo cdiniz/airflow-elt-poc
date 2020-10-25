@@ -5,12 +5,12 @@ from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import TaskInstance
 from datetime import datetime
 
-from dags.common.hooks.covid19_hook import Covid19Hook
-from dags.common.operators.covid19_to_ingestions import Covid19ToIngestions
+from common.hooks.covid19_hook import Covid19Hook
+from common.operators.covid19_to_ingestions import Covid19ToIngestions
 
 
 class TestCovid19ToIngestionsOperator:
-    _pg_hook = PostgresHook(postgres_conn_id='postgres-ingestions')
+    _pg_hook = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data')
     _sql_select = "SELECT * FROM covid19"
     _sql_delete = "DELETE FROM covid19"
     _start_date = datetime.now()

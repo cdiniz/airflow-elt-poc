@@ -11,8 +11,8 @@ class Covid19ToAnalytics(BaseOperator, SkipMixin):
         super(Covid19ToAnalytics, self).__init__(*args, **kwargs)
 
     def execute(self, context):
-        pg_hook = PostgresHook(postgres_conn_id='postgres-ingestions')
-        pg_hook_analytics = PostgresHook(postgres_conn_id='postgres-analytics-dw')
+        pg_hook = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data')
+        pg_hook_analytics = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data')
         day = context['ds']
         pg_hook_analytics.run("DELETE FROM covid19_stats where day = %s", parameters=[day])
         sql_read = """SELECT data #>> '{Country}' as country, 

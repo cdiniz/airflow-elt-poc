@@ -1,0 +1,68 @@
+version: '3'
+services:
+  postgres-airflow:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: pssd
+      POSTGRES_USER : airflowuser
+      POSTGRES_DB : airflowdb
+      AIRFLOW_SCHEMA: airflow
+    ports:
+        - "5432:5432"
+    volumes:
+      - ./scripts_postgres:/docker-entrypoint-airflow-initdb.d
+      - ./tmp/airflowdbdata:/var/lib/postgresql/data
+  
+  postgres-dbt:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER : user
+      POSTGRES_DB : covid19
+      DBT_SCHEMA: public
+      DBT_RAW_DATA_SCHEMA: dev_dbt
+    ports:
+        - "5433:5432"
+    volumes:
+      - ./scripts_postgres_dev:/docker-entrypoint-initdb.d
+      - ./tmp/devdbdata:/var/lib/postgresql/data 
+
+  airflow:
+    build: .
+    environment: 
+      DBT_PROFILES_DIR: /dbt
+      AIRFLOW_HOME: /airflow
+      AIRFLOW__CORE__DAGS_FOLDER: /airflow/src/dags
+      AIRFLOW__CORE__PARALLELISM: 4
+      AIRFLOW__CORE__DAG_CONCURRENCY: 4
+      AIRFLOW__CORE__MAX_ACTIVE_RUNS_PER_DAG: 4
+      POSTGRES_USER: airflowuser
+      POSTGRES_PASSWORD: pssd
+      POSTGRES_HOST: postgres-airflow
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: airflowdb
+      DBT_POSTGRES_PASSWORD: pass
+      DBT_POSTGRES_USER : user
+      DBT_POSTGRES_DB : covid19
+      DBT_DBT_SCHEMA: dev
+      DBT_DBT_RAW_DATA_SCHEMA: dev_dbt
+      DBT_POSTGRES_HOST: localhost
+      DBT_POSTGRES_PORT: 5433
+
+    depends_on:
+      - postgres-airflow
+      - postgres-dbt
+    ports:
+      - 8000:8080
+    volumes:
+      - ./dbt:/dbt
+      - ./airflow:/airflow
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres-airflow
+      - postgres-dbt
+

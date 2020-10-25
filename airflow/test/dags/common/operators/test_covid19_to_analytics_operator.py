@@ -5,21 +5,21 @@ from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import TaskInstance
 import datetime
 
-from dags.common.operators.covid19_to_analytics import Covid19ToAnalytics
+from common.operators.covid19_to_analytics import Covid19ToAnalytics
 
 
 class TestCovid19ToAnalyticsOperator:
 
     def setup_method(self):
         self._pg_hook.run(self._sql_delete_analytics)
-        self._pg_hook_ingestions.run(self._sql_delete_ingestions)
+        self._pg_hook.run(self._sql_delete_ingestions)
 
     def teardown_method(self):
         self._pg_hook.run(self._sql_delete_analytics)
-        self._pg_hook_ingestions.run(self._sql_delete_ingestions)
+        self._pg_hook.run(self._sql_delete_ingestions)
 
-    _pg_hook = PostgresHook(postgres_conn_id='postgres-analytics-dw')
-    _pg_hook_ingestions = PostgresHook(postgres_conn_id='postgres-ingestions')
+
+    _pg_hook = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data')
     _sql_select = "SELECT country, confirmed, deaths, recovered, active, day FROM covid19_stats"
     _sql_delete_analytics = "DELETE FROM covid19_stats"
     _sql_delete_ingestions = "DELETE FROM covid19"
@@ -57,7 +57,7 @@ class TestCovid19ToAnalyticsOperator:
     def test_execute(self, test_input, expected, dag):
         if len(test_input) > 0:
             data = list(map(lambda x: (json.dumps(x), self._start_date), test_input))
-            self._pg_hook_ingestions.insert_rows('covid19', data, target_fields=['data', 'day'])
+            self._pg_hook.insert_rows('covid19', data, target_fields=['data', 'day'])
         task = Covid19ToAnalytics(dag=dag, task_id="test_task")
         ti = TaskInstance(task=task, execution_date=self._start_date)
         task.execute(ti.get_template_context())
@@ -74,7 +74,7 @@ class TestCovid19ToAnalyticsOperator:
                              ])
     def test_execute_delete_previous_entry(self, test_input, expected, dag):
         data = list(map(lambda x: (json.dumps(x), self._start_date), test_input))
-        self._pg_hook_ingestions.insert_rows('covid19', data, target_fields=['data', 'day'])
+        self._pg_hook.insert_rows('covid19', data, target_fields=['data', 'day'])
         self._pg_hook.insert_rows("covid19_stats", [(self._start_date.date(),"Portugal")], target_fields=['day', 'country'])
         task = Covid19ToAnalytics(dag=dag, task_id="test_task")
         ti = TaskInstance(task=task, execution_date=self._start_date)

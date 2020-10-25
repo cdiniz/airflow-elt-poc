@@ -15,4 +15,3 @@ class Covid19Hook(HttpHook):
             time.sleep(rate_limit)
             response.raise_for_status()
             yield response.json()
-
