@@ -1,46 +1,70 @@
-## This repo is a proof of concept for a personal evaluation of airflow. 
-The goals are understanding the following topics:
- - how easy airflow is for local development
- - how easy airflow is to test and possibly use it in a tdd way
- - how easy is to implement custom operators/hooks, etc
- - how reusable are the custom implemented parts
- 
-### Install and Start Airflow
+## This repo is a POC of Airflow and DBT for ELT pipelines on a CI environment. 
+The goal is a personal evaluation of Airflow and Dbt, exploring the following topics:
+ - Setup airflow for a ci environment, how to develop and execute locally.
+ - Implement custom operators/hooks, etc.
+ - Testing Airflow dags, operators, hooks, using a TDD Approach.
+ - Reusability of custom components.
+ - Error handling in pipelines
+ - ELT Comparison between airflow and airflow+dbt.
+ - Testing DBT (besides dbt testing),
+ for instance: testing if a view has the information that should.
+ - How Dbt handles incremental views
 
-pip install virtualenv
+### The simple data pipeline example:
+Read data from https://covid19api.com/, stage the data on a covid19 table, 
+and transform the data into covid19_stats which has the stats per day per country. 
 
-virtualenv .venv
+#### Install local dev environment
 
-source .venv/bin/activate
+Install virtual env
 
-pip install -r requirements-docker.txt
+`pip install virtualenv
+`
 
-pip install -r requirements-dev.txt
+Create env
 
-docker-compose up
+`virtualenv .venv
+`
 
-### Run tests
+Activate env
 
-source dev-env.sh
+`source .venv/bin/activate
+`
 
-python -m pytest
+Install the same requirements as the docker image
 
-### Run backfill
+`pip install -r requirements-docker.txt
+`
 
-airflow backfill covid19 -s 2020-10-03 -e 2020-10-03
+Install requirements for development
 
-### Configure testing in pycharm
+`pip install -r requirements-dev.txt`
 
-create project
+#### Init docker
 
-choose existing interpretor and choose python3.7 from the created .venv
+`docker-compose up`
 
-choose from existing sources when prompted
+#### Init Environment 
+##### Local development, testing and airflow local execution
 
-get env vars from 'source dev-env.sh'
+`source dev-env.sh
+`
 
-mark src as Sources Root
+#### Test
 
-under configurations under python integrated tools, choose pytest as the default test runner
+`python -m pytest`
 
-run pytests in tests..
+#### Run backfills
+
+`airflow backfill covid19_dbt -s 2020-10-02 -e 2020-10-02
+`
+
+`airflow backfill covid19 -s 2020-10-02 -e 2020-10-02
+`
+#### Test Dag Tasks
+
+`airflow test covid19_dbt dbt_run 2020-10-02
+`
+
+`airflow test covid19_dbt dbt_test 2020-10-02
+`

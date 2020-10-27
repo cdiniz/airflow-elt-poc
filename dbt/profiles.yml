@@ -1,0 +1,16 @@
+
+# For more information on how to configure this file, please see:
+# https://docs.getdbt.com/docs/profile
+
+default:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: localhost
+      user: airflow
+      pass: airflow
+      schema: public
+      port: 5432
+      dbname: ingestions
+      threads: 4

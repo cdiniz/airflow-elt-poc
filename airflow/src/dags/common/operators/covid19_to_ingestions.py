@@ -17,9 +17,8 @@ class Covid19ToIngestions(BaseOperator, SkipMixin):
         pg_hook = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data')
         api_hook = Covid19Hook(http_conn_id='covid19-api', method='GET')
         pg_hook.run("DELETE FROM covid19 where day = %s", parameters=[context['ds']])
-        for country_data in api_hook.get_data(start_date=context['ds'],end_date=context['ds']):
-            for entry in country_data:
-                pg_hook.run("INSERT INTO covid19(data,day) VALUES(%s,%s)", parameters=(json.dumps(entry), context['ds']))
+        rows = map(lambda x: (json.dumps(x[0]), context['ds']),filter(lambda x: len(x), api_hook.get_data(start_date=context['ds'],end_date=context['ds'])))
+        pg_hook.insert_rows("covid19",rows,["data","day"])
 
 
 

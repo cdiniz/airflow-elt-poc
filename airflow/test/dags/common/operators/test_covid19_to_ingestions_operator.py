@@ -39,6 +39,7 @@ class TestCovid19ToIngestionsOperator:
     @pytest.mark.parametrize("test_input,expected",
                              [
                                  (iter([]), 0),
+                                 (iter([[]]), 0),
                                  (iter([_sample_response]), 1),
                                  (iter([_sample_response, _sample_response]), 2),
                              ])

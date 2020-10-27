@@ -14,6 +14,8 @@ export AIRFLOW__CORE__BASE_LOG_FOLDER=$AIRFLOW_HOME/logs
 export AIRFLOW__CORE__DAG_PROCESSOR_MANAGER_LOG_LOCATION=$AIRFLOW_HOME/logs/dag_processor_manager/dag_processor_manager.log
 export AIRFLOW__SCHEDULER__CHILD_PROCESS_LOG_DIRECTORY=$AIRFLOW_HOME/logs/scheduler
 
+export DBT_DIR=$(pwd)/dbt
+export DBT_PROFILES_DIR=$(pwd)/dbt/ci_profiles
 export DBT_PROFILE_HOST=localhost
 export DBT_PROFILE_USER=user
 export DBT_PROFILE_PASSWORD=pass

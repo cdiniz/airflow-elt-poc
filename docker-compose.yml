@@ -29,8 +29,9 @@ services:
 
   airflow:
     build: .
-    environment: 
-      DBT_PROFILES_DIR: /dbt
+    environment:
+      DBT_DIR: /dbt
+      DBT_PROFILES_DIR: /dbt/ci_profiles
       AIRFLOW_HOME: /airflow
       AIRFLOW__CORE__DAGS_FOLDER: /airflow/src/dags
       AIRFLOW__CORE__PARALLELISM: 4
@@ -53,7 +54,7 @@ services:
       - postgres-airflow
       - postgres-dbt
     ports:
-      - 8000:8080
+      - 8080:8080
     volumes:
       - ./dbt:/dbt
       - ./airflow:/airflow
@@ -61,7 +62,7 @@ services:
   adminer:
     image: adminer
     ports:
-      - 8080:8080
+      - 8000:8080
     depends_on:
       - postgres-airflow
       - postgres-dbt

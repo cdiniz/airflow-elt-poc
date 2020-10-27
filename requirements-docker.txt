@@ -1,5 +1,6 @@
 apache-airflow[postgres]
 dbt==0.15
+airflow-dbt==0.3.0
 cryptography==2.9.2
 pandas==1.1.2
 pendulum==1.4.4

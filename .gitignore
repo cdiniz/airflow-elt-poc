@@ -15,3 +15,5 @@ tmp/
 # stuffs that airflow output during runtime
 airflow/logs/
 airflow/unittests.cfg
+dbt/target/
+airflow/airflow-webserver.pid

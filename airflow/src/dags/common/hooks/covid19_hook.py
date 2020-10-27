@@ -10,8 +10,10 @@ class Covid19Hook(HttpHook):
         response = self.run(endpoint="/countries")
         response.raise_for_status()
         countries = list(map(lambda x: x['Slug'], response.json()))
+        responses = []
         for country in countries:
             response = self.run(endpoint="/country/{}".format(country),data={"from": start_date + 'T00:00:00Z', "to": end_date  + 'T23:59:59Z'})
             time.sleep(rate_limit)
             response.raise_for_status()
-            yield response.json()
+            responses.append(response.json())
+        return responses

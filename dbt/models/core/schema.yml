@@ -1,0 +1,11 @@
+
+version: 2
+
+models:
+    - name: covid19_stats_materialized
+      description: "A table with covid19 daily covid19 stats by country"
+      columns:
+          - name: country
+            description: "The country"
+            tests:
+                - not_null

@@ -1,0 +1,12 @@
+default:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DBT_PROFILE_HOST') }}"
+      user: "{{ env_var('DBT_PROFILE_USER') }}"
+      pass: "{{ env_var('DBT_PROFILE_PASSWORD') }}"
+      port: "{{ env_var('DBT_PROFILE_PORT') }}"
+      schema: "{{ env_var('DBT_PROFILE_SCHEMA') }}"
+      dbname: "{{ env_var('DBT_PROFILE_DB') }}"
+      threads: 4
