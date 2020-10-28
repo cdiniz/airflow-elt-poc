@@ -18,7 +18,8 @@ services:
     environment:
       POSTGRES_PASSWORD: pass
       POSTGRES_USER : user
-      POSTGRES_DB : covid19
+      POSTGRES_DB : covid19_dev
+      POSTGRES_DB_TEST : covid19_test
       DBT_SCHEMA: public
       DBT_RAW_DATA_SCHEMA: dev_dbt
     ports:

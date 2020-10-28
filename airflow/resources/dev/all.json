@@ -7,6 +7,7 @@
     "email_on_failure": true,
     "email_on_retry": false,
     "retries": 1,
-    "retry_delay": 5
+    "retry_delay": 5,
+    "connection_id": "dbt_postgres_instance_raw_data_dev"
   }
 }

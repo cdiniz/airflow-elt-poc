@@ -10,7 +10,7 @@ from common.operators.covid19_to_ingestions import Covid19ToIngestions
 
 
 class TestCovid19ToIngestionsOperator:
-    _pg_hook = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data')
+    _pg_hook = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data_test')
     _sql_select = "SELECT * FROM covid19"
     _sql_delete = "DELETE FROM covid19"
     _start_date = datetime.now()
@@ -46,7 +46,7 @@ class TestCovid19ToIngestionsOperator:
     @patch.object(Covid19Hook, 'get_data')
     def test_execute_with_valid_response(self, mock, test_input, expected, dag):
         mock.side_effect = [test_input]
-        task = Covid19ToIngestions(dag=dag, task_id="test_task")
+        task = Covid19ToIngestions(dag=dag, task_id="test_task", connection_id='dbt_postgres_instance_raw_data_test')
         ti = TaskInstance(task=task, execution_date=self._start_date)
         task.execute(ti.get_template_context())
         data = self._pg_hook.get_records("SELECT * FROM covid19")
@@ -61,7 +61,7 @@ class TestCovid19ToIngestionsOperator:
     def test_execute_deletes_previous_entry(self, mock, test_input, expected, dag):
         self._pg_hook.insert_rows("covid19", [(self._start_date.date(), '{}')], target_fields=['day', 'data'])
         mock.side_effect = [test_input]
-        task = Covid19ToIngestions(dag=dag, task_id="test_task")
+        task = Covid19ToIngestions(dag=dag, task_id="test_task", connection_id='dbt_postgres_instance_raw_data_test')
         ti = TaskInstance(task=task, execution_date=self._start_date)
         task.execute(ti.get_template_context())
         data = self._pg_hook.get_records("SELECT * FROM covid19")

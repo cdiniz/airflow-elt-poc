@@ -19,7 +19,7 @@ class TestCovid19ToAnalyticsOperator:
         self._pg_hook.run(self._sql_delete_ingestions)
 
 
-    _pg_hook = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data')
+    _pg_hook = PostgresHook(postgres_conn_id='dbt_postgres_instance_raw_data_test')
     _sql_select = "SELECT country, confirmed, deaths, recovered, active, day FROM covid19_stats"
     _sql_delete_analytics = "DELETE FROM covid19_stats"
     _sql_delete_ingestions = "DELETE FROM covid19"
@@ -58,7 +58,7 @@ class TestCovid19ToAnalyticsOperator:
         if len(test_input) > 0:
             data = list(map(lambda x: (json.dumps(x), self._start_date), test_input))
             self._pg_hook.insert_rows('covid19', data, target_fields=['data', 'day'])
-        task = Covid19ToAnalytics(dag=dag, task_id="test_task")
+        task = Covid19ToAnalytics(dag=dag, task_id="test_task", connection_id='dbt_postgres_instance_raw_data_test')
         ti = TaskInstance(task=task, execution_date=self._start_date)
         task.execute(ti.get_template_context())
 
@@ -76,7 +76,7 @@ class TestCovid19ToAnalyticsOperator:
         data = list(map(lambda x: (json.dumps(x), self._start_date), test_input))
         self._pg_hook.insert_rows('covid19', data, target_fields=['data', 'day'])
         self._pg_hook.insert_rows("covid19_stats", [(self._start_date.date(),"Portugal")], target_fields=['day', 'country'])
-        task = Covid19ToAnalytics(dag=dag, task_id="test_task")
+        task = Covid19ToAnalytics(dag=dag, task_id="test_task", connection_id='dbt_postgres_instance_raw_data_test')
         ti = TaskInstance(task=task, execution_date=self._start_date)
         task.execute(ti.get_template_context())
 
