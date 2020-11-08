@@ -28,14 +28,16 @@ with DAG( 'covid19_dbt',
     dbt_run = DbtRunOperator(
         task_id='dbt_run',
         dir = dbt_dir,
-        profiles_dir=dbt_profiles_dir
+        profiles_dir=dbt_profiles_dir,
+        models='covid19_stats_materialized'
     )
 
     dbt_test = DbtTestOperator(
         task_id='dbt_test',
         dir=dbt_dir,
         profiles_dir=dbt_profiles_dir,
-        retries=0  # Failing tests would fail the task, and we don't want Airflow to try again
+        retries=0,  # Failing tests would fail the task, and we don't want Airflow to try again
+        models='covid19_stats_materialized'
     )
 
     ingest_covid19_day_task >> dbt_run >> dbt_test

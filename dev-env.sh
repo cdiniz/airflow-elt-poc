@@ -21,7 +21,8 @@ export DBT_PROFILE_USER=user
 export DBT_PROFILE_PASSWORD=pass
 export DBT_PROFILE_PORT=5433
 export DBT_PROFILE_SCHEMA=public
-export DBT_PROFILE_DB=covid19
+export DBT_PROFILE_DB=covid19_dev
+export DBT_PROFILE_DB_TEST=covid19_test
 
 
 print \

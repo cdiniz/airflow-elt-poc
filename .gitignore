@@ -17,3 +17,4 @@ airflow/logs/
 airflow/unittests.cfg
 dbt/target/
 airflow/airflow-webserver.pid
+dbt/logs
